@@ -33,13 +33,6 @@ export default {
   ],
   created() {
     //console.log(this.shows);
-  },
-  filters: {
-    stripHTML: function(data) {
-      if(data){
-        return data.replace(/<\/?[^>]+>/ig, " ");
-      }
-    }
   }
 };
 </script>

@@ -7,6 +7,11 @@ import "bootstrap/dist/css/bootstrap.css" //Imports Bootstrap CSS
 
 Vue.config.productionTip = false;
 
+//Global Filters
+Vue.filter("stripHTML", data => { 
+  return data.replace(/<\/?[^>]+>/ig, " ");
+});
+
 new Vue({
   router,
   render: h => h(App)
