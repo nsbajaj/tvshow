@@ -1,33 +1,32 @@
 <template>
-    <!-- <h1 style="padding-top:100px;">{{ show.show.id }}</h1> -->
     <!-- Post Content Column -->
-      <div class="col-lg-8">
+      <div class="col-lg-8" v-if="show">
 
         <!-- Title -->
-        <h1 class="mt-4">{{ show.show.name }}</h1>
+        <h1 class="mt-4">{{ show.name }}</h1>
 
         <!-- Author -->
-        <p class="lead">
+        <p class="lead" v-if="show.network">
           by
-          <a href="#">{{ show.show.network.name }}</a>
+          {{ show.network.name }}
         </p>
 
         <hr>
 
-        <!-- Date/Time -->
-        <p>Posted on January 1, 2019 at 12:00 PM</p>
+        <!-- Rating -->
+        <!-- <p>Premiered on {{ show.premiered }}</p> -->
+        <p v-if="show.rating">Rating: {{ show.rating.average }}</p>
 
         <hr>
 
         <!-- Preview Image -->
-        <img class="img-fluid rounded" v-if="show.show.image" :src="show.show.image.medium" alt="">
-        <!-- <img class="img-fluid rounded" src="http://placehold.it/900x300" alt=""> -->
-
+        <img class="img-fluid rounded" v-if="show.image" :src="show.image.medium" :alt="show.name">
+        <img v-else class="mr-3 img-fluid rounded" src="https://lightwidget.com/wp-content/uploads/2018/05/local-file-not-found-295x300.png" :alt="show.name">
         <hr>
 
         <!-- Post Content -->
         <p class="lead">
-            {{ show.show.summary | stripHTML }}
+            {{ show.summary | stripHTML }}
         </p>
 
         <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ut, tenetur natus doloremque laborum quos iste ipsum rerum obcaecati impedit odit illo dolorum ab tempora nihil dicta earum fugiat. Temporibus, voluptatibus.</p>
@@ -101,11 +100,42 @@
 
 export default {
     name: 'show',
+    data() {
+      return {
+        show: null
+      }
+    },
      props: [
-        'show'
+        'id'
     ],
+    methods: {
+      searchShow: function(data){
+        if(data && String(data).trim().length > 0){
+          fetch('http://api.tvmaze.com/shows/' + data)
+          .then(function (response){
+              if(!response.ok){
+                  console.log(response.statusText);
+                  throw Error(response.statusText);
+              }
+              return response;
+          })
+          .then(response => response.json())
+          .then(data => {
+              this.show = data;
+          })
+          .catch(function(error) {
+              console.log(error);
+          })
+        }
+        else{
+          //console.log("Please enter data");
+        }
+      } 
+    },
     created() {
         //console.log("Shows component");
+        //console.log(this.$route.query);
+        this.searchShow(this.id);
   },
 }
 </script>

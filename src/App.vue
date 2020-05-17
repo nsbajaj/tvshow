@@ -1,7 +1,7 @@
 <template>
   <div id="app" class="mx-auto">
     <div id="nav" class="row">
-      <Navbar @search="searchShow"></Navbar>
+      <Navbar @search="searchShows"></Navbar>
       <!-- <router-link to="/show">Show</router-link> | -->
       <!-- <router-link to="/">Home</router-link> |
       <router-link to="/about">About</router-link> |
@@ -28,7 +28,7 @@ export default {
     };
   },
   methods: {
-    searchShow: function(data){
+    searchShows: function(data){
       if(data && data.trim().length > 0){
         fetch('http://api.tvmaze.com/search/shows?q=' + data)
         .then(function (response){
