@@ -1,32 +1,53 @@
 <template>
-  <div id="app">
+  <div id="app" class="mx-auto">
     <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
+      <Navbar @search="searchShow"></Navbar>
+      <!-- <router-link to="/show">Show</router-link> | -->
+      <!-- <router-link to="/">Home</router-link> |
+      <router-link to="/about">About</router-link> |
+      <router-link to="/navbar">Navbar</router-link> -->
     </div>
-    <router-view />
+    
+    <router-view
+      :shows="shows"
+    ></router-view>
   </div>
 </template>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
+<script>
+import Navbar from "./components/Navbar.vue";
 
-#nav {
-  padding: 30px;
+export default {
+  name: "App",
+  components: {
+    Navbar
+  },
+  data: function(){
+    return {
+      shows: null
+    };
+  },
+  methods: {
+    searchShow: function(element){
+      fetch('http://api.tvmaze.com/search/shows?q=' + element)
+      .then(function (response){
+          if(!response.ok){
+              throw Error(response.statusText);
+          }
+          return response;
+      })
+      .then(response => response.json())
+      .then(data => {
+          this.shows = data;
+      })
+      .catch(function(error) {
+          console.log(error);
+      })
+    }      
+  },
+  mounted: function(){
+  
+  }
 }
+</script>
 
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-#nav a.router-link-exact-active {
-  color: #42b983;
-}
-</style>
