@@ -28,21 +28,27 @@ export default {
     };
   },
   methods: {
-    searchShow: function(element){
-      fetch('http://api.tvmaze.com/search/shows?q=' + element)
-      .then(function (response){
-          if(!response.ok){
-              throw Error(response.statusText);
-          }
-          return response;
-      })
-      .then(response => response.json())
-      .then(data => {
-          this.shows = data;
-      })
-      .catch(function(error) {
-          console.log(error);
-      })
+    searchShow: function(data){
+      if(data && data.trim().length > 0){
+        fetch('http://api.tvmaze.com/search/shows?q=' + data)
+        .then(function (response){
+            if(!response.ok){
+                console.log(response.statusText);
+                throw Error(response.statusText);
+            }
+            return response;
+        })
+        .then(response => response.json())
+        .then(data => {
+            this.shows = data;
+        })
+        .catch(function(error) {
+            console.log(error);
+        })
+      }
+      else{
+        console.log("Please enter data");
+      }
     }      
   },
   mounted: function(){

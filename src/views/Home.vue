@@ -1,10 +1,11 @@
 <template>
   <div class="home" style="padding-top: 80px;">
+    <h1>Shows: </h1>
     <ul v-for="(item, index) in shows" :key="item.id" :data-index="index">
       <li>
         <label>ID: {{ item.show.id }}</label>
         <br>
-        <router-link :to="{ name: 'Show', params: { id: item.show.id } }">
+        <router-link :to="{ name: 'Show', params: { show: item } }">
           <label>Name: {{ item.show.name }}</label>
         </router-link>
         <br>
@@ -32,8 +33,10 @@ export default {
     //console.log(this.shows);
   },
   filters: {
-    stripHTML: function(string) {
-      return string.replace(/<\/?[^>]+>/ig, " "); 
+    stripHTML: function(data) {
+      if(data){
+        return data.replace(/<\/?[^>]+>/ig, " ");
+      }
     }
   }
 };

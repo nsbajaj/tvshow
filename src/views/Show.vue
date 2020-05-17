@@ -1,5 +1,5 @@
 <template>
-    <h1 style="padding-top:100px;">{{ id }}</h1>
+    <h1 style="padding-top:100px;">{{ show.show.id }}</h1>
 </template>
 
 <script>
@@ -7,11 +7,10 @@
 export default {
     name: 'show',
      props: [
-        'id'
+        'show'
     ],
     created() {
-        console.log("Shows component");
-        console.log(this.id);
+        //console.log("Shows component");
   },
 }
 </script>
