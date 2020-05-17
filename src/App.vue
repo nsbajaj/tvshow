@@ -1,6 +1,6 @@
 <template>
   <div id="app" class="mx-auto">
-    <div id="nav">
+    <div id="nav" class="row">
       <Navbar @search="searchShow"></Navbar>
       <!-- <router-link to="/show">Show</router-link> | -->
       <!-- <router-link to="/">Home</router-link> |
