@@ -1,17 +1,18 @@
 <template>
-  <div class="home" style="padding-top: 80px;">
+  <div class="home">
     <h1>Shows: </h1>
-    <ul v-for="(item, index) in shows" :key="item.id" :data-index="index">
-      <li>
-        <label>ID: {{ item.show.id }}</label>
-        <br>
-        <router-link :to="{ name: 'Show', params: { show: item } }">
-          <label>Name: {{ item.show.name }}</label>
-        </router-link>
-        <br>
-        <label>Rating: {{ item.show.rating.average }}</label>
-        <br>
-        <label>Summary: {{ item.show.summary | stripHTML }}</label>
+    <ul class="list-unstyled" v-for="(item, index) in shows" :key="item.id" :data-index="index">
+      <li class="media">
+        <img v-if="item.show.image" :src="item.show.image.medium" class="mr-3" :alt="item.show.name">
+        <img v-else src="https://lightwidget.com/wp-content/uploads/2018/05/local-file-not-found-295x300.png" class="mr-3" :alt="item.show.name">
+
+        <div class="media-body">
+          <router-link :to="{ name: 'Show', params: { show: item } }">
+            <!-- <h5 v-if="item.show.image">{{ item.show.image.medium }}</h5> -->
+            <h5 class="mt-0 mb-1">{{ item.show.name }}</h5>
+          </router-link>
+          Description: {{ item.show.summary | stripHTML }}
+        </div>
       </li>
     </ul>
   </div>

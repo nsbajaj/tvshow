@@ -8,7 +8,7 @@
       <router-link to="/navbar">Navbar</router-link> -->
     </div>
     
-    <router-view
+    <router-view class="container" style="padding-top: 80px;"
       :shows="shows"
     ></router-view>
   </div>
