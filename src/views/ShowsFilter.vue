@@ -7,7 +7,7 @@
                   :id="item.status" :value="item.status" v-model="checkedStatus">
                   {{ item.status }}
             </div>
-            <span>Checked names: {{ checkedStatus }}</span>
+            <!-- <span>Checked names: {{ checkedStatus }}</span> -->
         </div>
     </div>
 </template>

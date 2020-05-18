@@ -1,15 +1,13 @@
 <template>
   <div id="app" class="mx-auto">
     <div id="nav">
-      <Navbar @search="searchShows"></Navbar>
-      <!-- <router-link to="/show">Show</router-link> | -->
-      <!-- <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link> |
-      <router-link to="/navbar">Navbar</router-link> -->
+      <Navbar @search="search"></Navbar>
     </div>
     
-    <router-view class="container-fluid" style="padding-top: 80px;"
-      :shows="shows"
+    <router-view
+      class="container-fluid"
+      style="padding-top: 80px;"
+      :searchResult="searchResult"
     ></router-view>
   </div>
 </template>
@@ -24,23 +22,60 @@ export default {
   },
   data: function(){
     return {
-      shows: null
+      searchResult: {
+        shows: {
+          data: null,
+          type: "show"
+        },
+        people: {
+          data: null,
+          type: "people"
+        }
+      // searchResult: {
+      //   data: null,
+      //   type: null
+      }
     };
   },
   methods: {
+    search: function(data){
+      this.searchShows(data);
+      this.searchPeople(data);
+      //console.log(JSON.stringify(this.searchResult));
+    },
     searchShows: function(data){
       if(data && data.trim().length > 0){
         fetch('http://api.tvmaze.com/search/shows?q=' + data)
         .then(function (response){
             if(!response.ok){
-                console.log(response.statusText);
                 throw Error(response.statusText);
             }
             return response;
         })
         .then(response => response.json())
         .then(data => {
-            this.shows = data;
+            this.searchResult.shows.data = data;
+        })
+        .catch(function(error) {
+            console.log(error);
+        })
+      }
+      else{
+        console.log("Please enter data");
+      }
+    },
+    searchPeople: function(data){
+      if(data && data.trim().length > 0){
+        fetch('http://api.tvmaze.com/search/people?q=' + data)
+        .then(function (response){
+            if(!response.ok){
+                throw Error(response.statusText);
+            }
+            return response;
+        })
+        .then(response => response.json())
+        .then(data => {
+            this.searchResult.people.data = data;
         })
         .catch(function(error) {
             console.log(error);
