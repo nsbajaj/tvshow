@@ -11,15 +11,19 @@
                 <li class="nav-item active">
                     <router-link :to="{ path: '/' }" class="nav-link" href="#">Home <span class="sr-only">(current)</span></router-link>
                 </li>
+                <li class="nav-item">
+                    <router-link :to="{ path: '/shows' }" class="nav-link" href="#">Shows <span class="sr-only"></span></router-link>
+                </li>
                 <!-- <li class="nav-item">
-                    <a class="nav-link" href="#">Link</a>
+                    <a class="nav-link" href="#">People</a>
                 </li> -->
                 </ul>
                 <form class="form-inline my-2 my-lg-0">
-                <input v-model="input" class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-                <router-link :to="{ path: '/' }">
-                    <button @click="$emit('search', input)" class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-                </router-link>
+                    <input v-model="input" class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+                    <router-link :to="{ name: 'Search', params: { id: input }}"
+                    v-if="input">
+                        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                    </router-link>
                 </form>
             </div>
         </div>
