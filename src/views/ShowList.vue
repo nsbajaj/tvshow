@@ -11,10 +11,10 @@
         @genresFilter="setSelectedGenres"
       ></ShowsFilter>
     </div>
-    <div class="col-10">
-      <h1>Shows:</h1>
-      <!-- Shows -->
+    <div class="col-10" v-if="showComponent">
+      <!-- Filtered Shows -->
       <span v-if="filteredShows.length>0">
+        <h1>Shows ({{ filteredShows.length }}):</h1>
         <ul class="list-unstyled">
           <li
             class="media my-4"
@@ -57,7 +57,11 @@
           </li>
         </ul>
       </span>
+      <span v-else-if="!showAll">
+        <h1>No shows found matching your criteria.</h1>
+      </span>
       <span v-else>
+        <h1>Shows ({{ shows.length }}):</h1>
         <ul class="list-unstyled">
           <li
             class="media my-4"
@@ -116,11 +120,12 @@ export default {
       status: [],
       genres: [],
       filteredShows: [],
-      prevFilteredShows: [],
       filtersApplied: {
         status: [],
         genres: []
-      }
+      },
+      showAll: true,
+      showComponent: false
     };
   },
   components: {
@@ -142,7 +147,8 @@ export default {
         .then((response) => response.json())
         .then((data) => {
           this.shows = data;
-
+          this.showComponent = true;
+          
           //Getting Genres
           this.filterStatus();
           this.filterGenres();
@@ -174,25 +180,26 @@ export default {
       }
     },
     mergeData: function(){
-      var temp = [];
+      this.filteredShows = [];
       for(let i = 0; i < this.shows.length; i++){
         let show = this.shows[i];
         let result = show.genres.filter(genre => this.filtersApplied.genres.includes(genre));
         if(result.length > 0){
-          temp.push(show);
+          this.filteredShows.push(show);
         }
       }
-      this.filteredShows = [...temp];
-
+            
       var result = [];
       if(this.filteredShows.length > 0){
         if(this.filtersApplied.status.length > 0){
           result = this.filteredShows.filter(show => this.filtersApplied.status.includes(show.status));
           if(result.length > 0){
             this.filteredShows = [...result];
+            this.showAll = true;
           }
           else{
             this.filteredShows = [];
+            this.showAll = false;
           }
         }
       }
@@ -201,9 +208,11 @@ export default {
           result = this.shows.filter(show => this.filtersApplied.status.includes(show.status));
           if(result.length > 0){
             this.filteredShows = [...result];
+            this.showAll = true;
           }
           else{
             this.filteredShows = [];
+            this.showAll = false;
           }
         }
       }

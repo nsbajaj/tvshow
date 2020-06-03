@@ -4,7 +4,7 @@
       <!-- <ShowsFilter @statusFilter="checkboxFilter"></ShowsFilter> -->
     </div>
     <div class="col-10">
-      <h1>Search results:</h1>
+      <h1>Search results ({{ searchResult.shows.data.length+searchResult.people.data.length }}):</h1>
       <!-- Shows -->
       <ul class="list-unstyled">
         <li
