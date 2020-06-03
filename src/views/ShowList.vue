@@ -116,7 +116,11 @@ export default {
       status: [],
       genres: [],
       filteredShows: [],
-      prevFilteredShows: []
+      prevFilteredShows: [],
+      filtersApplied: {
+        status: [],
+        genres: []
+      }
     };
   },
   components: {
@@ -169,89 +173,66 @@ export default {
         this.genres.sort();
       }
     },
-    mergeData: function(data){
-      console.log("before data length: " + data.length);
-      console.log("before filtered shows length: " + this.filteredShows.length);
-      if(this.filteredShows.length > 0 && data.length > 0){
+    mergeData: function(){
+      var temp = [];
+      for(let i = 0; i < this.shows.length; i++){
+        let show = this.shows[i];
+        let result = show.genres.filter(genre => this.filtersApplied.genres.includes(genre));
+        if(result.length > 0){
+          temp.push(show);
+        }
+      }
+      this.filteredShows = [...temp];
 
-        var filteredKeywords = data.filter((word) => !this.filteredShows.includes(word));
-        for(let i = 0; i < filteredKeywords.length; i++){
-          if(this.filteredShows.includes(filteredKeywords)){
-            console.log("includes - " + filteredKeywords[i].name);
+      var result = [];
+      if(this.filteredShows.length > 0){
+        if(this.filtersApplied.status.length > 0){
+          result = this.filteredShows.filter(show => this.filtersApplied.status.includes(show.status));
+          if(result.length > 0){
+            this.filteredShows = [...result];
           }
           else{
-            console.log("doesn't include - " + filteredKeywords[i].name);
-            this.filteredShows.push(filteredKeywords[i]);
+            this.filteredShows = [];
           }
         }
-
-        // var temp = [];
-        // for(let i = 0; i < data.length; i++){
-        //   if(this.filteredShows.includes(data[i])){
-        //     temp.push(data[i]);
-        //     console.log("Includes - " + data[i].name);
-        //   }
-        //   else{
-        //     console.log("Doesn't include - " + data[i].name);
-            //this.filteredShows.push(data[i]);
-        //     temp.push(data[i]);
-        //   }
-        // }
-        // for(let i = 0; i < this.filteredShows.length; i++){
-        //   if(!data.includes(this.filteredShows[i])){
-        //     console.log("IF - " + this.filteredShows[i].name);
-        //     temp.push(this.filteredShows[i]);
-            //console.log("includes - " + this.filteredShows[i].name);
-          // }
-          // else{
-          //   console.log("ELSE - " + this.filteredShows[i].name);
-            //console.log("doesn't include - " + this.filteredShows[i].name);
-          //}
-        
-        //this.filteredShows = [...temp];
-        this.prevFilteredShows = [...this.filteredShows];
       }
-      else if(data.length > 0 && this.filteredShows.length == 0){
-        console.log("2");
-        this.filteredShows = [...data];
+      else{
+        if(this.filtersApplied.status.length > 0){
+          result = this.shows.filter(show => this.filtersApplied.status.includes(show.status));
+          if(result.length > 0){
+            this.filteredShows = [...result];
+          }
+          else{
+            this.filteredShows = [];
+          }
+        }
       }
-      else if(data.length == 0 && this.filteredShows.length == 0){
-        console.log("3");
-        this.filteredShows = [...this.shows];
-      }
-      else if(data.length == 0 && this.filteredShows.length > 0){
-        console.log("4");
-         this.filteredShows = [...this.shows];
-        //this.filteredShows = [...this.prevFilteredShows];
-      }
-      console.log("after data length: " + data.length);
-      console.log("after filtered shows length: " + this.filteredShows.length);
     },
     setSelectedStatus: function(data) {
-      var temp = this.shows.filter(function(show){
-        if(data.includes(show.status)){
-          return true;
-        }
-        else{
-          return false;
-        }
-      });
-      this.mergeData(temp);
-    },
-    
-    setSelectedGenres: function(data) {
-      //this.filteredShows = [];
-      var temp = [];
       if(data.length > 0){
-        for(let i = 0; i < this.shows.length; i++){
-          let show = this.shows[i];
-          let result = show.genres.filter(genre => data.includes(genre));
-          if(result.length > 0){
-            temp.push(show);
+        this.filtersApplied.status = [];
+        for(let i = 0; i < data.length; i++){
+          if(!this.filtersApplied.status.includes(data[i])){
+            this.filtersApplied.status.push(data[i]);
           }
         }
-      } 
-      this.mergeData(temp); 
+      }
+      else{
+        this.filtersApplied.status = [];
+      }
+      this.mergeData();
+    },
+    setSelectedGenres: function(data) {
+      if(data.length > 0){
+        this.filtersApplied.genres = [];
+        for(let i = 0; i < data.length; i++){
+          this.filtersApplied.genres.push(data[i]);
+        }
+      }
+      else{
+        this.filtersApplied.genres = [];
+      }
+      this.mergeData();
     },
   },
 };
