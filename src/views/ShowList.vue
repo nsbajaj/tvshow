@@ -3,17 +3,23 @@
     <div class="col-2">
       <ShowsFilter
         v-if="shows"
-
         :showStatus="status"
         @statusFilter="setSelectedStatus"
-
         :genres="genres"
         @genresFilter="setSelectedGenres"
+        :languages="languages"
+        @languageFilter="setSelectedLanguages"
       ></ShowsFilter>
     </div>
     <div class="col-10" v-if="showComponent">
       <!-- Shows -->
-      <span v-if="filtersApplied.status.length==0 && filtersApplied.genres.length==0">
+      <span
+        v-if="
+          filtersApplied.status.length == 0 && 
+          filtersApplied.genres.length == 0 && 
+          filtersApplied.languages.length == 0
+        "
+      >
         <h1>Shows ({{ shows.length }}):</h1>
         <ul class="list-unstyled">
           <li
@@ -48,19 +54,23 @@
               {{ item.status }}
 
               <br />
-              <br />
 
               Genres:
               <span v-for="(genre, index) in item.genres" :key="index">
                 {{ genre }}
               </span>
+
+              <br />
+
+              Language:
+              {{ item.language }}
             </div>
           </li>
         </ul>
       </span>
 
       <!-- Filtered Shows -->
-      <span v-else-if="filteredShows.length>0">
+      <span v-else-if="filteredShows.length > 0">
         <h1>Shows ({{ filteredShows.length }}):</h1>
         <ul class="list-unstyled">
           <li
@@ -94,12 +104,16 @@
               Status: {{ item.status }}
 
               <br />
-              <br />
 
-              Genre:
+              Genres:
               <span v-for="(genre, index) in item.genres" :key="index">
                 {{ genre }}
               </span>
+
+              <br />
+
+              Language:
+              {{ item.language }}
             </div>
           </li>
         </ul>
@@ -119,15 +133,21 @@ export default {
   name: "ShowList",
   data() {
     return {
-      shows: null,
+      shows: null, //Full list of shows (remains unmodified)
+      filteredShows: [], //List of filtered shows (once a filter or selection has been made)
+
+      //List of properties extracted from the shows, distinct and sorted.
       status: [],
       genres: [],
-      filteredShows: [],
+      languages: [],
+
+      //Filters being applied will be stored in fittersApplied
       filtersApplied: {
         status: [],
-        genres: []
+        genres: [],
+        languages: [],
       },
-      showComponent: false
+      showComponent: false, //Used to display component once data has been fetched.
     };
   },
   components: {
@@ -149,18 +169,21 @@ export default {
         .then((response) => response.json())
         .then((data) => {
           this.shows = data;
-          this.showComponent = true;
-          
-          //Getting Genres
+          if (this.shows.length > 0) {
+            this.showComponent = true;
+          }
+
+          //Generating content for the filters using the list of shows
           this.filterStatus();
           this.filterGenres();
+          this.filterLanguages();
         })
         .catch(function(error) {
           console.log(error);
         });
     },
-    filterStatus: function(){
-      if (this.shows) {
+    filterStatus: function() {
+      if (this.shows.length > 0) {
         for (let i = 0; i < this.shows.length; i++) {
           if (!this.status.includes(this.shows[i].status)) {
             this.status.push(this.shows[i].status);
@@ -170,7 +193,7 @@ export default {
       }
     },
     filterGenres: function() {
-      if (this.shows) {
+      if (this.shows.length > 0) {
         for (let i = 0; i < this.shows.length; i++) {
           for (let j = 0; j < this.shows[i].genres.length; j++) {
             if (!this.genres.includes(this.shows[i].genres[j])) {
@@ -181,63 +204,114 @@ export default {
         this.genres.sort();
       }
     },
-    mergeData: function(){
-      this.filteredShows = [];
-      for(let i = 0; i < this.shows.length; i++){
-        let show = this.shows[i];
-        let result = show.genres.filter(genre => this.filtersApplied.genres.includes(genre));
-        if(result.length > 0){
-          this.filteredShows.push(show);
-        }
-      }
-            
-      var result = [];
-      if(this.filteredShows.length > 0){
-        if(this.filtersApplied.status.length > 0){
-          result = this.filteredShows.filter(show => this.filtersApplied.status.includes(show.status));
-          if(result.length > 0){
-            this.filteredShows = [...result];
-          }
-          else{
-            this.filteredShows = [];
+    filterLanguages: function() {
+      if (this.shows.length > 0) {
+        for (let i = 0; i < this.shows.length; i++) {
+          if (!this.languages.includes(this.shows[i].language)) {
+            this.languages.push(this.shows[i].language);
           }
         }
-      }
-      else{
-        if(this.filtersApplied.status.length > 0){
-          result = this.shows.filter(show => this.filtersApplied.status.includes(show.status));
-          if(result.length > 0){
-            this.filteredShows = [...result];
-          }
-          else{
-            this.filteredShows = [];
-          }
-        }
+        this.languages.sort();
       }
     },
+    mergeData: function() {
+      //Genre filter
+      this.filteredShows = [];
+      if(this.shows.length > 0){
+        for (let i = 0; i < this.shows.length; i++) {
+          let show = this.shows[i];
+          let result = show.genres.filter((genre) => this.filtersApplied.genres.includes(genre));
+          if (result.length > 0) {
+            this.filteredShows.push(show);
+          }
+        }
+      }
+
+      //Status filter
+      var statusResult = [];
+      if (this.filteredShows.length > 0) {
+        if (this.filtersApplied.status.length > 0) {
+          statusResult = this.filteredShows.filter((show) => this.filtersApplied.status.includes(show.status));
+          if (statusResult.length > 0) {
+            this.filteredShows = [...statusResult];
+          }
+          else {
+            this.filteredShows = [];
+          }
+        }
+      } else {
+        if (this.filtersApplied.status.length > 0) {
+          statusResult = this.shows.filter((show) => this.filtersApplied.status.includes(show.status));
+          if (statusResult.length > 0) {
+            this.filteredShows = [...statusResult];
+          }
+          else {
+            this.filteredShows = [];
+          }
+        }
+      }
+
+      //Language filter
+      var languageResult = [];
+      if (this.filteredShows.length > 0) {
+        if (this.filtersApplied.languages.length > 0) {
+          languageResult = this.filteredShows.filter((show) => this.filtersApplied.languages.includes(show.language));
+          if (languageResult.length > 0) {
+            this.filteredShows = [...languageResult];
+          }
+          else {
+            this.filteredShows = [];
+          }
+        }
+      }
+      else {
+        if (this.filtersApplied.languages.length > 0) {
+          languageResult = this.shows.filter((show) => this.filtersApplied.languages.includes(show.language));
+          if (languageResult.length > 0) {
+            this.filteredShows = [...languageResult];
+          }
+          else {
+            this.filteredShows = [];
+          }
+        }
+      }
+
+      //TODO: type, runtime, premier (yearly, monthly), rating,
+    },
     setSelectedStatus: function(data) {
-      if(data.length > 0){
+      if (data.length > 0) {
         this.filtersApplied.status = [];
-        for(let i = 0; i < data.length; i++){
-          if(!this.filtersApplied.status.includes(data[i])){
+        for (let i = 0; i < data.length; i++) {
+          if (!this.filtersApplied.status.includes(data[i])) {
             this.filtersApplied.status.push(data[i]);
           }
         }
-      }
-      else{
+      } else {
         this.filtersApplied.status = [];
       }
       this.mergeData();
     },
     setSelectedGenres: function(data) {
-      if(data.length > 0){
+      if (data.length > 0) {
         this.filtersApplied.genres = [];
-        for(let i = 0; i < data.length; i++){
+        for (let i = 0; i < data.length; i++) {
           this.filtersApplied.genres.push(data[i]);
         }
-      }
-      else{
+      } else {
         this.filtersApplied.genres = [];
+      }
+      this.mergeData();
+    },
+    setSelectedLanguages: function(data) {
+      if (data.length > 0) {
+        this.filtersApplied.languages = [];
+        for (let i = 0; i < data.length; i++) {
+          if (!this.filtersApplied.languages.includes(data[i])) {
+            this.filtersApplied.languages.push(data[i]);
+          }
+        }
+      } else {
+        this.filtersApplied.languages = [];
       }
       this.mergeData();
     },
