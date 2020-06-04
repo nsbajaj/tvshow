@@ -12,55 +12,8 @@
       ></ShowsFilter>
     </div>
     <div class="col-10" v-if="showComponent">
-      <!-- Filtered Shows -->
-      <span v-if="filteredShows.length>0">
-        <h1>Shows ({{ filteredShows.length }}):</h1>
-        <ul class="list-unstyled">
-          <li
-            class="media my-4"
-            v-for="(item, index) in filteredShows"
-            :key="item.id"
-            :data-index="index"
-          >
-            <router-link :to="{ name: 'Show', params: { id: item.id } }">
-              <img
-                v-if="item.image"
-                :src="item.image.medium"
-                class="mr-3 img-fluid rounded"
-                :alt="item.name"
-              />
-              <img
-                v-else
-                src="https://lightwidget.com/wp-content/uploads/2018/05/local-file-not-found-295x300.png"
-                class="mr-3"
-                :alt="item.name"
-              />
-            </router-link>
-            <div class="media-body">
-              <router-link :to="{ name: 'Show', params: { id: item.id } }">
-                <h5 class="mt-0 mb-1">{{ item.name }}</h5>
-              </router-link>
-              Description: {{ item.summary | stripHTML }}
-              <br />
-              <br />
-
-              Status: {{ item.status }}
-
-              <br />
-              <br />
-
-              Genre:
-              <span v-for="(genre, index) in item.genres" :key="index">
-                {{ genre }}
-              </span>
-            </div>
-          </li>
-        </ul>
-      </span>
-      <span v-else-if="!showAll">
-        <h1>No shows found matching your criteria.</h1>
-      </span>
-      <span v-else>
+      <!-- Shows -->
+      <span v-if="filtersApplied.status.length==0 && filtersApplied.genres.length==0">
         <h1>Shows ({{ shows.length }}):</h1>
         <ul class="list-unstyled">
           <li
@@ -105,6 +58,56 @@
           </li>
         </ul>
       </span>
+
+      <!-- Filtered Shows -->
+      <span v-else-if="filteredShows.length>0">
+        <h1>Shows ({{ filteredShows.length }}):</h1>
+        <ul class="list-unstyled">
+          <li
+            class="media my-4"
+            v-for="(item, index) in filteredShows"
+            :key="item.id"
+            :data-index="index"
+          >
+            <router-link :to="{ name: 'Show', params: { id: item.id } }">
+              <img
+                v-if="item.image"
+                :src="item.image.medium"
+                class="mr-3 img-fluid rounded"
+                :alt="item.name"
+              />
+              <img
+                v-else
+                src="https://lightwidget.com/wp-content/uploads/2018/05/local-file-not-found-295x300.png"
+                class="mr-3"
+                :alt="item.name"
+              />
+            </router-link>
+            <div class="media-body">
+              <router-link :to="{ name: 'Show', params: { id: item.id } }">
+                <h5 class="mt-0 mb-1">{{ item.name }}</h5>
+              </router-link>
+              Description: {{ item.summary | stripHTML }}
+              <br />
+              <br />
+
+              Status: {{ item.status }}
+
+              <br />
+              <br />
+
+              Genre:
+              <span v-for="(genre, index) in item.genres" :key="index">
+                {{ genre }}
+              </span>
+            </div>
+          </li>
+        </ul>
+      </span>
+      <!-- No shows found -->
+      <span v-else>
+        <h1>No shows found matching your criteria.</h1>
+      </span>
     </div>
   </div>
 </template>
@@ -124,7 +127,6 @@ export default {
         status: [],
         genres: []
       },
-      showAll: true,
       showComponent: false
     };
   },
@@ -195,11 +197,9 @@ export default {
           result = this.filteredShows.filter(show => this.filtersApplied.status.includes(show.status));
           if(result.length > 0){
             this.filteredShows = [...result];
-            this.showAll = true;
           }
           else{
             this.filteredShows = [];
-            this.showAll = false;
           }
         }
       }
@@ -208,11 +208,9 @@ export default {
           result = this.shows.filter(show => this.filtersApplied.status.includes(show.status));
           if(result.length > 0){
             this.filteredShows = [...result];
-            this.showAll = true;
           }
           else{
             this.filteredShows = [];
-            this.showAll = false;
           }
         }
       }
