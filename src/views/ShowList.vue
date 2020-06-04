@@ -3,142 +3,158 @@
     <div class="col-2">
       <ShowsFilter
         v-if="shows"
-
         :showStatus="status"
         @statusFilter="setSelectedStatus"
-        
         :genres="genres"
         @genreFilter="setSelectedGenres"
-        
         :languages="languages"
         @languageFilter="setSelectedLanguages"
-
         :types="types"
         @typeFilter="setSelectedTypes"
       ></ShowsFilter>
     </div>
+    <!-- Layout credit: https://bootsnipp.com/snippets/vr6qd -->
     <div class="col-10" v-if="showComponent">
       <!-- Shows -->
-      <span
+      <section
+        class="movies"
+        id="movies"
         v-if="
-          filtersApplied.status.length == 0 && 
-          filtersApplied.genres.length == 0 && 
-          filtersApplied.languages.length == 0 &&
-          filtersApplied.types.length == 0
+          filtersApplied.status.length == 0 &&
+            filtersApplied.genres.length == 0 &&
+            filtersApplied.languages.length == 0 &&
+            filtersApplied.types.length == 0
         "
       >
         <h1>Shows ({{ shows.length }}):</h1>
-        <ul class="list-unstyled">
-          <li
-            class="media my-4"
+        <div class="row">
+          <div
+            class="col-lg-3 col-md-4 col-sm-6 my-2"
             v-for="(item, index) in shows"
             :key="item.id"
             :data-index="index"
           >
-            <router-link :to="{ name: 'Show', params: { id: item.id } }">
-              <img
-                v-if="item.image"
-                :src="item.image.medium"
-                class="mr-3 img-fluid rounded"
-                :alt="item.name"
-              />
-              <img
-                v-else
-                src="https://lightwidget.com/wp-content/uploads/2018/05/local-file-not-found-295x300.png"
-                class="mr-3"
-                :alt="item.name"
-              />
-            </router-link>
-            <div class="media-body">
-              <router-link :to="{ name: 'Show', params: { id: item.id } }">
-                <h5 class="mt-0 mb-1">{{ item.name }}</h5>
-              </router-link>
-              Description: {{ item.summary | stripHTML }}
-              <br />
-              <br />
+            <article class="card">
+              <header class="title-header">
+                <router-link :to="{ name: 'Show', params: { id: item.id } }">
+                  <h3>{{ item.name }}</h3>
+                </router-link>
+              </header>
+              <div class="card-block">
+                <div class="img-card">
+                  <router-link :to="{ name: 'Show', params: { id: item.id } }">
+                    <img
+                      v-if="item.image"
+                      :src="item.image.original"
+                      class="w-100 mr-3 img-fluid rounded"
+                      :alt="item.name"
+                    />
+                    <img
+                      v-else
+                      src="https://lightwidget.com/wp-content/uploads/2018/05/local-file-not-found-295x300.png"
+                      class="w-100 mr-3 img-fluid rounded"
+                      :alt="item.name"
+                    />
+                  </router-link>
+                </div>
+                <p class="tagline card-text text-xs-center mx-2">
+                  Count: {{ item.summary.length }}
+                  Description: {{ item.summary.substring(0, 100) | stripHTML }}
+                </p>
 
-              Status:
-              {{ item.status }}
+                Status:
+                {{ item.status }}
 
-              <br />
+                Genres:
+                <p v-for="(genre, index) in item.genres" :key="index">
+                  {{ genre }}
+                </p>
 
-              Genres:
-              <span v-for="(genre, index) in item.genres" :key="index">
-                {{ genre }}
-              </span>
+                Language:
+                <p>{{ item.language }}</p>
 
-              <br />
+                Type:
+                <p>{{ item.type }}</p>
 
-              Language:
-              {{ item.language }}
-
-              <br />
-
-              Type:
-              {{ item.type }}
-            </div>
-          </li>
-        </ul>
-      </span>
+                <router-link
+                  :to="{ name: 'Show', params: { id: item.id } }"
+                  class="btn btn-primary btn-block"
+                >
+                  <i class="fa fa-eye"></i> View Details
+                </router-link>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
 
       <!-- Filtered Shows -->
-      <span v-else-if="filteredShows.length > 0">
+      <section class="movies" id="movies" v-else-if="filteredShows.length > 0">
         <h1>Shows ({{ filteredShows.length }}):</h1>
-        <ul class="list-unstyled">
-          <li
-            class="media my-4"
+        <div class="row">
+          <div
+            class="col-lg-3 col-md-4 col-sm-6"
             v-for="(item, index) in filteredShows"
             :key="item.id"
             :data-index="index"
           >
-            <router-link :to="{ name: 'Show', params: { id: item.id } }">
-              <img
-                v-if="item.image"
-                :src="item.image.medium"
-                class="mr-3 img-fluid rounded"
-                :alt="item.name"
-              />
-              <img
-                v-else
-                src="https://lightwidget.com/wp-content/uploads/2018/05/local-file-not-found-295x300.png"
-                class="mr-3"
-                :alt="item.name"
-              />
-            </router-link>
-            <div class="media-body">
-              <router-link :to="{ name: 'Show', params: { id: item.id } }">
-                <h5 class="mt-0 mb-1">{{ item.name }}</h5>
-              </router-link>
-              Description: {{ item.summary | stripHTML }}
-              <br />
-              <br />
+            <article class="card">
+              <header class="title-header">
+                <router-link :to="{ name: 'Show', params: { id: item.id } }">
+                  <h3>{{ item.name }}</h3>
+                </router-link>
+              </header>
+              <div class="card-block">
+                <div class="img-card">
+                  <router-link :to="{ name: 'Show', params: { id: item.id } }">
+                    <img
+                      v-if="item.image"
+                      :src="item.image.original"
+                      class="w-100 mr-3 img-fluid rounded"
+                      :alt="item.name"
+                    />
+                    <img
+                      v-else
+                      src="https://lightwidget.com/wp-content/uploads/2018/05/local-file-not-found-295x300.png"
+                      class="w-100 mr-3 img-fluid rounded"
+                      :alt="item.name"
+                    />
+                  </router-link>
+                </div>
+                <p class="tagline card-text text-xs-center">
+                  Description: {{ item.summary | stripHTML }}
+                </p>
 
-              Status: {{ item.status }}
+                Status:
+                {{ item.status }}
 
-              <br />
+                Genres:
+                <p v-for="(genre, index) in item.genres" :key="index">
+                  {{ genre }}
+                </p>
 
-              Genres:
-              <span v-for="(genre, index) in item.genres" :key="index">
-                {{ genre }}
-              </span>
+                Language:
+                <p>{{ item.language }}</p>
 
-              <br />
+                Type:
+                <p>{{ item.type }}</p>
 
-              Language:
-              {{ item.language }}
+                <router-link
+                  :to="{ name: 'Show', params: { id: item.id } }"
+                  class="btn btn-primary btn-block"
+                >
+                  <i class="fa fa-eye"></i> View Details
+                </router-link>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
 
-              <br />
-
-              Type:
-              {{ item.type }}
-            </div>
-          </li>
-        </ul>
-      </span>
       <!-- No shows found -->
-      <span v-else>
+      <section v-else class="movies" id="movies">
         <h1>No shows found matching your criteria.</h1>
-      </span>
+      </section>
     </div>
   </div>
 </template>
@@ -164,7 +180,7 @@ export default {
         status: [],
         genres: [],
         languages: [],
-        types: []
+        types: [],
       },
       showComponent: false, //Used to display component once data has been fetched.
     };
@@ -234,7 +250,7 @@ export default {
         this.languages.sort();
       }
     },
-    filterTypes: function(){
+    filterTypes: function() {
       if (this.shows.length > 0) {
         for (let i = 0; i < this.shows.length; i++) {
           if (!this.types.includes(this.shows[i].type)) {
@@ -247,10 +263,12 @@ export default {
     mergeData: function() {
       //Genre filter
       this.filteredShows = [];
-      if(this.shows.length > 0){
+      if (this.shows.length > 0) {
         for (let i = 0; i < this.shows.length; i++) {
           let show = this.shows[i];
-          let result = show.genres.filter((genre) => this.filtersApplied.genres.includes(genre));
+          let result = show.genres.filter((genre) =>
+            this.filtersApplied.genres.includes(genre)
+          );
           if (result.length > 0) {
             this.filteredShows.push(show);
           }
@@ -261,21 +279,23 @@ export default {
       var statusResult = [];
       if (this.filteredShows.length > 0) {
         if (this.filtersApplied.status.length > 0) {
-          statusResult = this.filteredShows.filter((show) => this.filtersApplied.status.includes(show.status));
+          statusResult = this.filteredShows.filter((show) =>
+            this.filtersApplied.status.includes(show.status)
+          );
           if (statusResult.length > 0) {
             this.filteredShows = [...statusResult];
-          }
-          else {
+          } else {
             this.filteredShows = [];
           }
         }
       } else {
         if (this.filtersApplied.status.length > 0) {
-          statusResult = this.shows.filter((show) => this.filtersApplied.status.includes(show.status));
+          statusResult = this.shows.filter((show) =>
+            this.filtersApplied.status.includes(show.status)
+          );
           if (statusResult.length > 0) {
             this.filteredShows = [...statusResult];
-          }
-          else {
+          } else {
             this.filteredShows = [];
           }
         }
@@ -285,22 +305,23 @@ export default {
       var languageResult = [];
       if (this.filteredShows.length > 0) {
         if (this.filtersApplied.languages.length > 0) {
-          languageResult = this.filteredShows.filter((show) => this.filtersApplied.languages.includes(show.language));
+          languageResult = this.filteredShows.filter((show) =>
+            this.filtersApplied.languages.includes(show.language)
+          );
           if (languageResult.length > 0) {
             this.filteredShows = [...languageResult];
-          }
-          else {
+          } else {
             this.filteredShows = [];
           }
         }
-      }
-      else {
+      } else {
         if (this.filtersApplied.languages.length > 0) {
-          languageResult = this.shows.filter((show) => this.filtersApplied.languages.includes(show.language));
+          languageResult = this.shows.filter((show) =>
+            this.filtersApplied.languages.includes(show.language)
+          );
           if (languageResult.length > 0) {
             this.filteredShows = [...languageResult];
-          }
-          else {
+          } else {
             this.filteredShows = [];
           }
         }
@@ -310,28 +331,29 @@ export default {
       var typesResult = [];
       if (this.filteredShows.length > 0) {
         if (this.filtersApplied.types.length > 0) {
-          typesResult = this.filteredShows.filter((show) => this.filtersApplied.types.includes(show.type));
+          typesResult = this.filteredShows.filter((show) =>
+            this.filtersApplied.types.includes(show.type)
+          );
           if (typesResult.length > 0) {
             this.filteredShows = [...typesResult];
-          }
-          else {
+          } else {
             this.filteredShows = [];
           }
         }
-      }
-      else {
+      } else {
         if (this.filtersApplied.types.length > 0) {
-          typesResult = this.shows.filter((show) => this.filtersApplied.types.includes(show.type));
+          typesResult = this.shows.filter((show) =>
+            this.filtersApplied.types.includes(show.type)
+          );
           if (typesResult.length > 0) {
             this.filteredShows = [...typesResult];
-          }
-          else {
+          } else {
             this.filteredShows = [];
           }
         }
       }
 
-      //TODO: runtime, premier (yearly, monthly), rating,
+      //TODO: rating, runtime, premier (yearly, monthly).
     },
     setSelectedStatus: function(data) {
       if (data.length > 0) {
@@ -370,7 +392,7 @@ export default {
       }
       this.mergeData();
     },
-    setSelectedTypes: function(data){
+    setSelectedTypes: function(data) {
       if (data.length > 0) {
         this.filtersApplied.types = [];
         for (let i = 0; i < data.length; i++) {
@@ -382,7 +404,59 @@ export default {
         this.filtersApplied.types = [];
       }
       this.mergeData();
-    }
+    },
   },
 };
 </script>
+
+<style scoped>
+.title-header {
+  padding: 0.75rem 1.25rem;
+  background-color: #f5f5f5;
+  border-bottom: 1px solid transparent;
+}
+.title-header h3 {
+  font-size: 0.8rem;
+  margin: 0;
+}
+/* .movies {
+  margin-top: 2rem;
+} */
+.img-card {
+  width: 100%;
+  margin-bottom: 0.4rem;
+}
+.movies {
+  margin-bottom: 0.6rem;
+}
+.series {
+  margin-bottom: 0.6rem;
+}
+.footer {
+  padding: 1rem 0;
+  margin-top: 2rem;
+  font-size: 80%;
+  text-align: left;
+}
+.footer p {
+  margin: 0;
+}
+.footer-links {
+  padding-left: 0;
+  margin-bottom: 1rem;
+}
+.footer-links li {
+  display: inline-block;
+}
+.footer a {
+  font-weight: 500;
+  color: inherit;
+}
+.footer-links li + li {
+  margin-left: 1rem;
+}
+/* Bug Bootstrap V4.0.6 - Mobile - SCSS _navbar*/
+.navbar {
+  display: block;
+}
+</style>
