@@ -1,5 +1,15 @@
 <template>
     <div class="card my-2">
+        <!-- Show type -->
+        <h5 class="card-header">Filter by type:</h5>
+        <div class="card-body" v-if="types.length>0">
+            <div class="form-check" v-for="item in types" :key="item">
+                  <input @change="$emit('typeFilter', checkedTypes)" class="form-check-input" type="checkbox"
+                  :id="item" :value="item" v-model="checkedTypes">
+                  {{ item }}
+            </div>
+        </div>
+
         <!-- Language -->
         <h5 class="card-header">Filter by language:</h5>
         <div class="card-body" v-if="languages.length>0">
@@ -24,7 +34,7 @@
         <h5 class="card-header">Filter by genres:</h5>
         <div class="card-body" v-if="genres.length>0">
             <div class="form-check" v-for="item in genres" :key="item">
-                <input @change="$emit('genresFilter', checkedGenres)" class="form-check-input" type="checkbox"
+                <input @change="$emit('genreFilter', checkedGenres)" class="form-check-input" type="checkbox"
                 :id="item" :value="item" v-model="checkedGenres">
                 {{ item }}
             </div>
@@ -39,13 +49,15 @@ export default {
         return {
             checkedStatus: [],
             checkedGenres: [],
-            checkedLanguages: []
+            checkedLanguages: [],
+            checkedTypes: []
         };
     },
     props: [
         'showStatus',
         'genres',
-        'languages'
+        'languages',
+        'types'
     ],
     created() {
 

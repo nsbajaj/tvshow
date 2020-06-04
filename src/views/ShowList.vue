@@ -3,12 +3,18 @@
     <div class="col-2">
       <ShowsFilter
         v-if="shows"
+
         :showStatus="status"
         @statusFilter="setSelectedStatus"
+        
         :genres="genres"
-        @genresFilter="setSelectedGenres"
+        @genreFilter="setSelectedGenres"
+        
         :languages="languages"
         @languageFilter="setSelectedLanguages"
+
+        :types="types"
+        @typeFilter="setSelectedTypes"
       ></ShowsFilter>
     </div>
     <div class="col-10" v-if="showComponent">
@@ -17,7 +23,8 @@
         v-if="
           filtersApplied.status.length == 0 && 
           filtersApplied.genres.length == 0 && 
-          filtersApplied.languages.length == 0
+          filtersApplied.languages.length == 0 &&
+          filtersApplied.types.length == 0
         "
       >
         <h1>Shows ({{ shows.length }}):</h1>
@@ -64,6 +71,11 @@
 
               Language:
               {{ item.language }}
+
+              <br />
+
+              Type:
+              {{ item.type }}
             </div>
           </li>
         </ul>
@@ -114,6 +126,11 @@
 
               Language:
               {{ item.language }}
+
+              <br />
+
+              Type:
+              {{ item.type }}
             </div>
           </li>
         </ul>
@@ -140,12 +157,14 @@ export default {
       status: [],
       genres: [],
       languages: [],
+      types: [],
 
       //Filters being applied will be stored in fittersApplied
       filtersApplied: {
         status: [],
         genres: [],
         languages: [],
+        types: []
       },
       showComponent: false, //Used to display component once data has been fetched.
     };
@@ -177,6 +196,7 @@ export default {
           this.filterStatus();
           this.filterGenres();
           this.filterLanguages();
+          this.filterTypes();
         })
         .catch(function(error) {
           console.log(error);
@@ -212,6 +232,16 @@ export default {
           }
         }
         this.languages.sort();
+      }
+    },
+    filterTypes: function(){
+      if (this.shows.length > 0) {
+        for (let i = 0; i < this.shows.length; i++) {
+          if (!this.types.includes(this.shows[i].type)) {
+            this.types.push(this.shows[i].type);
+          }
+        }
+        this.types.sort();
       }
     },
     mergeData: function() {
@@ -276,7 +306,32 @@ export default {
         }
       }
 
-      //TODO: type, runtime, premier (yearly, monthly), rating,
+      //Types filter
+      var typesResult = [];
+      if (this.filteredShows.length > 0) {
+        if (this.filtersApplied.types.length > 0) {
+          typesResult = this.filteredShows.filter((show) => this.filtersApplied.types.includes(show.type));
+          if (typesResult.length > 0) {
+            this.filteredShows = [...typesResult];
+          }
+          else {
+            this.filteredShows = [];
+          }
+        }
+      }
+      else {
+        if (this.filtersApplied.types.length > 0) {
+          typesResult = this.shows.filter((show) => this.filtersApplied.types.includes(show.type));
+          if (typesResult.length > 0) {
+            this.filteredShows = [...typesResult];
+          }
+          else {
+            this.filteredShows = [];
+          }
+        }
+      }
+
+      //TODO: runtime, premier (yearly, monthly), rating,
     },
     setSelectedStatus: function(data) {
       if (data.length > 0) {
@@ -315,6 +370,19 @@ export default {
       }
       this.mergeData();
     },
+    setSelectedTypes: function(data){
+      if (data.length > 0) {
+        this.filtersApplied.types = [];
+        for (let i = 0; i < data.length; i++) {
+          if (!this.filtersApplied.types.includes(data[i])) {
+            this.filtersApplied.types.push(data[i]);
+          }
+        }
+      } else {
+        this.filtersApplied.types = [];
+      }
+      this.mergeData();
+    }
   },
 };
 </script>
