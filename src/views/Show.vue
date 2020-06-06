@@ -14,14 +14,14 @@
 
         <hr />
 
-        <!-- Rating -->
+        <!-- Premiered -->
         <!-- <p>Premiered on {{ show.premiered }}</p> -->
         <p v-if="show.rating">Rating: {{ show.rating.average }}</p>
 
         <hr />
 
         <!-- Preview Image -->
-        <!-- <img
+        <img
           class="img-fluid rounded"
           v-if="show.image"
           :src="show.image.medium"
@@ -32,18 +32,18 @@
           class="mr-3 img-fluid rounded"
           src="https://lightwidget.com/wp-content/uploads/2018/05/local-file-not-found-295x300.png"
           :alt="show.name"
-        /> -->
+        />
         <hr />
 
         <!-- Post Content -->
         
-        <!-- <p class="lead">
+        <p class="lead">
           {{ show.summary | stripHTML }}
-        </p> -->
+        </p>
 
         <hr />
 
-        <!-- <Cast :showID="show.id"></Cast> -->
+        <Cast :showID="show.id"></Cast>
         
         <hr />
 
@@ -63,7 +63,7 @@
 </template>
 
 <script>
-// import Cast from "./Cast.vue";
+import Cast from "./Cast.vue";
 import EpisodeList from "./EpisodeList.vue";
 import Season from "./Season.vue";
 
@@ -115,7 +115,7 @@ export default {
     this.searchShow(this.id);
   },
   components: {
-    // Cast,
+    Cast,
     EpisodeList,
     Season
   }
