@@ -43,7 +43,7 @@
 
         <hr />
 
-        <Cast :showID="show.id"></Cast>
+        <Cast :cast="show._embedded.cast"></Cast>
         
         <hr />
 
@@ -88,7 +88,7 @@ export default {
     },
     searchShow: function(data) {
       if (data && String(data).trim().length > 0) {
-        fetch("http://api.tvmaze.com/shows/" + data + "?embed[]=seasons&embed[]=episodes")
+        fetch("http://api.tvmaze.com/shows/" + data + "?embed[]=seasons&embed[]=episodes&embed[]=cast")
           .then(function(response) {
             if (!response.ok) {
               throw Error(response.statusText);
