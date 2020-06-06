@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <div class="row">
+    <div class="row" v-if="showComponent">
       <!-- Post Content Column -->
       <div class="col-lg-12" v-if="show">
         <!-- Title -->
@@ -21,7 +21,7 @@
         <hr />
 
         <!-- Preview Image -->
-        <img
+        <!-- <img
           class="img-fluid rounded"
           v-if="show.image"
           :src="show.image.medium"
@@ -32,27 +32,28 @@
           class="mr-3 img-fluid rounded"
           src="https://lightwidget.com/wp-content/uploads/2018/05/local-file-not-found-295x300.png"
           :alt="show.name"
-        />
+        /> -->
         <hr />
 
         <!-- Post Content -->
         
-        <p class="lead">
+        <!-- <p class="lead">
           {{ show.summary | stripHTML }}
-        </p>
+        </p> -->
 
         <hr />
 
-        <Cast :showID="show.id"></Cast>
+        <!-- <Cast :showID="show.id"></Cast> -->
         
         <hr />
 
         <div class="row">
           <div class="col-4">
-            <Season :showID="show.id" @seasonID="setSeasonID"></Season>
+            <!-- <Season :showID="show.id" @seasonID="setSeasonID"></Season> -->
+            <Season :seasons="show._embedded.seasons" @seasonID="setSeasonID"></Season>
           </div>
           <div class="col-8">
-            <EpisodeList v-if="seasonID>0" :seasonID="seasonID"></EpisodeList>
+            <EpisodeList v-if="episodes.length>0" :episodes="episodes"></EpisodeList>
           </div>
         </div>
         <hr />
@@ -62,7 +63,7 @@
 </template>
 
 <script>
-import Cast from "./Cast.vue";
+// import Cast from "./Cast.vue";
 import EpisodeList from "./EpisodeList.vue";
 import Season from "./Season.vue";
 
@@ -71,7 +72,9 @@ export default {
   data() {
     return {
       show: null,
-      seasonID: 0
+      seasonID: 0,
+      episodes: [],
+      showComponent: false, //Used to display component once data has been fetched.
     };
   },
   props: [
@@ -80,12 +83,12 @@ export default {
   methods: {
     setSeasonID: function(data){
       if(data > 0){
-        this.seasonID = data;
+        this.episodes = this.show._embedded.episodes.filter(episode => episode.season == data);
       }
     },
     searchShow: function(data) {
       if (data && String(data).trim().length > 0) {
-        fetch("http://api.tvmaze.com/shows/" + data)
+        fetch("http://api.tvmaze.com/shows/" + data + "?embed[]=seasons&embed[]=episodes")
           .then(function(response) {
             if (!response.ok) {
               throw Error(response.statusText);
@@ -95,6 +98,9 @@ export default {
           .then((response) => response.json())
           .then((data) => {
             this.show = data;
+            if(this.show){
+              this.showComponent = true;
+            }
           })
           .catch(function(error) {
             console.log(error);
@@ -105,12 +111,11 @@ export default {
     },
   },
   created() {
-    //console.log("Shows component");
     //console.log(this.$route.query);
     this.searchShow(this.id);
   },
   components: {
-    Cast,
+    // Cast,
     EpisodeList,
     Season
   }

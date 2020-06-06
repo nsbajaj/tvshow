@@ -3,7 +3,7 @@
     <div class="col-2">
       <!-- <ShowsFilter @statusFilter="checkboxFilter"></ShowsFilter> -->
     </div>
-    <div class="col-10">
+    <div class="col-10" v-if="showComponent">
       <h1>Search results ({{ searchResult.shows.data.length+searchResult.people.data.length }}):</h1>
       <!-- Shows -->
       <ul class="list-unstyled">
@@ -89,7 +89,8 @@ export default {
           data: null,
           type: "people"
         }
-      }
+      },
+      showComponent: false, //Used to display component once data has been fetched.
     };
   },
   components: {
@@ -136,6 +137,7 @@ export default {
         .then(response => response.json())
         .then(data => {
             this.searchResult.people.data = data;
+            this.showComponent = true;
         })
         .catch(function(error) {
             console.log(error);

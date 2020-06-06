@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>Episodes</h1>
+    <h1 v-if="episodes.length>0">Episodes ({{ episodes.length }})</h1>
     <table class="table table-hover">
       <thead class="thead-dark">
         <tr>
@@ -33,67 +33,65 @@ export default {
   name: "EpisodeList",
   data() {
     return {
-      episodes: null,
+      
     };
   },
-  props: ["showID", "seasonID"],
+  props: ["showID", "episodes"],
   created() {
-    if (this.seasonID > 0) {
-      this.searchEpisodesBySeason(this.seasonID);
-    }
+  
   },
   methods: {
     //searchEpisodesByShow: gets all the episodes for the SeasonID.
-    searchEpisodesBySeason: function() {
-      if (this.seasonID && String(this.seasonID).trim().length > 0) {
-        fetch("http://api.tvmaze.com/seasons/" + this.seasonID + "/episodes")
-          .then(function(response) {
-            if (!response.ok) {
-              throw Error(response.statusText);
-            }
-            return response;
-          })
-          .then((response) => response.json())
-          .then((data) => {
-            this.episodes = data;
-          })
-          .catch(function(error) {
-            console.log(error);
-          });
-      } else {
-        //console.log("Please enter data");
-      }
-    },
+    // searchEpisodesBySeason: function() {
+    //   if (this.seasonID && String(this.seasonID).trim().length > 0) {
+    //     fetch("http://api.tvmaze.com/seasons/" + this.seasonID + "/episodes")
+    //       .then(function(response) {
+    //         if (!response.ok) {
+    //           throw Error(response.statusText);
+    //         }
+    //         return response;
+    //       })
+    //       .then((response) => response.json())
+    //       .then((data) => {
+    //         this.episodes = data;
+    //       })
+    //       .catch(function(error) {
+    //         console.log(error);
+    //       });
+    //   } else {
+    //     //console.log("Please enter data");
+    //   }
+    // },
     /*
     Improvement for future: Don't fetch all the data, fetch little by little.
     */
     //searchEpisodes: gets all the episodes for the showID.
-    searchEpisodesByShow: function() {
-      if (this.showID && String(this.showID).trim().length > 0) {
-        fetch("http://api.tvmaze.com/shows/" + this.showID + "/episodes")
-          .then(function(response) {
-            if (!response.ok) {
-              throw Error(response.statusText);
-            }
-            return response;
-          })
-          .then((response) => response.json())
-          .then((data) => {
-            this.episodes = data;
-          })
-          .catch(function(error) {
-            console.log(error);
-          });
-      } else {
-        //console.log("Please enter data");
-      }
-    },
+    // searchEpisodesByShow: function() {
+    //   if (this.showID && String(this.showID).trim().length > 0) {
+    //     fetch("http://api.tvmaze.com/shows/" + this.showID + "/episodes")
+    //       .then(function(response) {
+    //         if (!response.ok) {
+    //           throw Error(response.statusText);
+    //         }
+    //         return response;
+    //       })
+    //       .then((response) => response.json())
+    //       .then((data) => {
+    //         this.episodes = data;
+    //       })
+    //       .catch(function(error) {
+    //         console.log(error);
+    //       });
+    //   } else {
+    //     //console.log("Please enter data");
+    //   }
+    // },
   },
-  watch: {
-    seasonID: function(newValue) {
-      this.searchEpisodesBySeason(newValue);
-    },
-  },
+  // watch: {
+  //   seasonID: function(newValue) {
+  //     this.searchEpisodesBySeason(newValue);
+  //   },
+  // },
 };
 </script>
 

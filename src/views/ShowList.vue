@@ -59,11 +59,12 @@
                 </div>
                 <p class="tagline card-text text-xs-center mx-2">
                   Count: {{ item.summary.length }}
-                  Description: {{ item.summary.substring(0, 100) | stripHTML }}
+                  <!-- Description: {{ item.summary.substring(0, 100) | stripHTML }} -->
+                  Description: {{ item.summary | stripHTML }}
                 </p>
 
                 Status:
-                {{ item.status }}
+                <p>{{ item.status }}</p>
 
                 Genres:
                 <p v-for="(genre, index) in item.genres" :key="index">
@@ -126,7 +127,7 @@
                 </p>
 
                 Status:
-                {{ item.status }}
+                <p>{{ item.status }}</p>
 
                 Genres:
                 <p v-for="(genre, index) in item.genres" :key="index">
