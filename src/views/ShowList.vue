@@ -26,10 +26,37 @@
             filtersApplied.types.length == 0
         "
       >
+        <h4>Current Page: {{ currentPage + 1 }}</h4>
+        <nav aria-label="">
+          <ul class="pagination">
+            <li :class="paginationPrevious">
+              <a
+                class="page-link"
+                href="#"
+                v-on:click="getPreviousPage"
+                aria-label="Previous"
+              >
+                <span aria-hidden="true">&laquo;</span>
+                <span class="sr-only">Previous</span>
+              </a>
+            </li>
+            <li :class="paginationNext">
+              <a
+                class="page-link"
+                href="#"
+                v-on:click="getNextPage"
+                aria-label="Next"
+              >
+                <span aria-hidden="true">&raquo;</span>
+                <span class="sr-only">Next</span>
+              </a>
+            </li>
+          </ul>
+        </nav>
         <h1>Shows ({{ shows.length }}):</h1>
         <div class="row">
           <div
-            class="col-lg-3 col-md-4 col-sm-6 my-2"
+            class="col-lg-2 col-md-4 col-sm-6 my-2"
             v-for="(item, index) in shows"
             :key="item.id"
             :data-index="index"
@@ -40,48 +67,20 @@
                   <h3>{{ item.name }}</h3>
                 </router-link>
               </header>
-              <div class="card-block">
-                <div class="img-card">
-                  <router-link :to="{ name: 'Show', params: { id: item.id } }">
-                    <img
-                      v-if="item.image"
-                      :src="item.image.original"
-                      class="w-100 mr-3 img-fluid rounded"
-                      :alt="item.name"
-                    />
-                    <img
+              <div class="card">
+                <router-link :to="{ name: 'Show', params: { id: item.id } }">
+                  <img 
+                    v-if="item.image"
+                    :src="item.image.original"
+                    class="w-100 mr-3 card-img-top rounded imgDimensions"
+                    :alt="item.name"
+                  >
+                  <img
                       v-else
                       src="https://lightwidget.com/wp-content/uploads/2018/05/local-file-not-found-295x300.png"
-                      class="w-100 mr-3 img-fluid rounded"
+                      class="w-100 mr-3 card-img-top rounded imgDimensions"
                       :alt="item.name"
                     />
-                  </router-link>
-                </div>
-                <p class="tagline card-text text-xs-center mx-2">
-                  Count: {{ item.summary.length }}
-                  <!-- Description: {{ item.summary.substring(0, 100) | stripHTML }} -->
-                  Description: {{ item.summary | stripHTML }}
-                </p>
-
-                Status:
-                <p>{{ item.status }}</p>
-
-                Genres:
-                <p v-for="(genre, index) in item.genres" :key="index">
-                  {{ genre }}
-                </p>
-
-                Language:
-                <p>{{ item.language }}</p>
-
-                Type:
-                <p>{{ item.type }}</p>
-
-                <router-link
-                  :to="{ name: 'Show', params: { id: item.id } }"
-                  class="btn btn-primary btn-block"
-                >
-                  <i class="fa fa-eye"></i> View Details
                 </router-link>
               </div>
             </article>
@@ -94,7 +93,7 @@
         <h1>Shows ({{ filteredShows.length }}):</h1>
         <div class="row">
           <div
-            class="col-lg-3 col-md-4 col-sm-6"
+            class="col-lg-2 col-md-4 col-sm-6 my-2"
             v-for="(item, index) in filteredShows"
             :key="item.id"
             :data-index="index"
@@ -105,46 +104,20 @@
                   <h3>{{ item.name }}</h3>
                 </router-link>
               </header>
-              <div class="card-block">
-                <div class="img-card">
-                  <router-link :to="{ name: 'Show', params: { id: item.id } }">
-                    <img
-                      v-if="item.image"
-                      :src="item.image.original"
-                      class="w-100 mr-3 img-fluid rounded"
-                      :alt="item.name"
-                    />
-                    <img
+              <div class="card">
+                <router-link :to="{ name: 'Show', params: { id: item.id } }">
+                  <img 
+                    v-if="item.image"
+                    :src="item.image.original"
+                    class="w-100 mr-3 card-img-top rounded imgDimensions"
+                    :alt="item.name"
+                  >
+                  <img
                       v-else
                       src="https://lightwidget.com/wp-content/uploads/2018/05/local-file-not-found-295x300.png"
-                      class="w-100 mr-3 img-fluid rounded"
+                      class="w-100 mr-3 card-img-top rounded imgDimensions"
                       :alt="item.name"
                     />
-                  </router-link>
-                </div>
-                <p class="tagline card-text text-xs-center">
-                  Description: {{ item.summary | stripHTML }}
-                </p>
-
-                Status:
-                <p>{{ item.status }}</p>
-
-                Genres:
-                <p v-for="(genre, index) in item.genres" :key="index">
-                  {{ genre }}
-                </p>
-
-                Language:
-                <p>{{ item.language }}</p>
-
-                Type:
-                <p>{{ item.type }}</p>
-
-                <router-link
-                  :to="{ name: 'Show', params: { id: item.id } }"
-                  class="btn btn-primary btn-block"
-                >
-                  <i class="fa fa-eye"></i> View Details
                 </router-link>
               </div>
             </article>
@@ -184,7 +157,25 @@ export default {
         types: [],
       },
       showComponent: false, //Used to display component once data has been fetched.
+      currentPage: 0,
+      lastPage: 194,
     };
+  },
+  computed: {
+    paginationPrevious: function() {
+      if (this.currentPage <= 0) {
+        return "page-item disabled";
+      } else {
+        return "page-item";
+      }
+    },
+    paginationNext: function() {
+      if (this.currentPage >= this.lastPage) {
+        return "page-item disabled";
+      } else {
+        return "page-item";
+      }
+    },
   },
   components: {
     ShowsFilter,
@@ -195,16 +186,23 @@ export default {
   },
   methods: {
     getAllShows: function() {
-      fetch("http://api.tvmaze.com/shows")
+      fetch("http://api.tvmaze.com/shows?page=" + this.currentPage)
         .then(function(response) {
           if (!response.ok) {
+            if (response.status == 404) {
+              this.shows = null;
+            }
+            //console.log(response.status)
             throw Error(response.statusText);
+          } else {
+            return response;
           }
-          return response;
         })
         .then((response) => response.json())
         .then((data) => {
-          this.shows = data;
+          if (data) {
+            this.shows = data;
+          }
           if (this.shows.length > 0) {
             this.showComponent = true;
           }
@@ -218,6 +216,18 @@ export default {
         .catch(function(error) {
           console.log(error);
         });
+    },
+    getPreviousPage: function() {
+      if (this.currentPage > 0) {
+        this.currentPage--;
+        this.getAllShows();
+      }
+    },
+    getNextPage: function() {
+      if (this.currentPage < this.lastPage) {
+        this.currentPage++;
+        this.getAllShows();
+      }
     },
     filterStatus: function() {
       if (this.shows.length > 0) {
@@ -420,44 +430,8 @@ export default {
   font-size: 0.8rem;
   margin: 0;
 }
-/* .movies {
-  margin-top: 2rem;
-} */
-.img-card {
-  width: 100%;
-  margin-bottom: 0.4rem;
-}
-.movies {
-  margin-bottom: 0.6rem;
-}
-.series {
-  margin-bottom: 0.6rem;
-}
-.footer {
-  padding: 1rem 0;
-  margin-top: 2rem;
-  font-size: 80%;
-  text-align: left;
-}
-.footer p {
-  margin: 0;
-}
-.footer-links {
-  padding-left: 0;
-  margin-bottom: 1rem;
-}
-.footer-links li {
-  display: inline-block;
-}
-.footer a {
-  font-weight: 500;
-  color: inherit;
-}
-.footer-links li + li {
-  margin-left: 1rem;
-}
-/* Bug Bootstrap V4.0.6 - Mobile - SCSS _navbar*/
-.navbar {
-  display: block;
+.imgDimensions {
+  /* width: 200px; */
+  height: 300px;
 }
 </style>
