@@ -1,134 +1,148 @@
 <template>
-  <div class="home row mx-2">
-    <div class="col-2">
-      <ShowsFilter
-        v-if="shows"
-        :showStatus="status"
-        @statusFilter="setSelectedStatus"
-        :genres="genres"
-        @genreFilter="setSelectedGenres"
-        :languages="languages"
-        @languageFilter="setSelectedLanguages"
-        :types="types"
-        @typeFilter="setSelectedTypes"
-      ></ShowsFilter>
+  <div>
+    <div class="home row mx-2" v-if="showComponent">
+      <div class="col-2">
+        <ShowsFilter
+          v-if="shows"
+          :showStatus="status"
+          @statusFilter="setSelectedStatus"
+          :genres="genres"
+          @genreFilter="setSelectedGenres"
+          :languages="languages"
+          @languageFilter="setSelectedLanguages"
+          :types="types"
+          @typeFilter="setSelectedTypes"
+          :runtime="runtime"
+          @runtimeFilter="setSelectedRuntime"
+        ></ShowsFilter>
+      </div>
+      <!-- Layout credit: https://bootsnipp.com/snippets/vr6qd -->
+      <div class="col-10">
+        <!-- Shows -->
+        <section
+          class="movies"
+          id="movies"
+          v-if="
+            filtersApplied.status.length == 0 &&
+              filtersApplied.genres.length == 0 &&
+              filtersApplied.languages.length == 0 &&
+              filtersApplied.types.length == 0 &&
+              filtersApplied.runtime == 0
+          "
+        >
+          <h4>Current Page: {{ currentPage + 1 }}</h4>
+          <nav aria-label="">
+            <ul class="pagination">
+              <li :class="paginationPrevious">
+                <a
+                  class="page-link"
+                  href="#"
+                  v-on:click="getPreviousPage"
+                  aria-label="Previous"
+                >
+                  <span aria-hidden="true">&laquo;</span>
+                  <span class="sr-only">Previous</span>
+                </a>
+              </li>
+              <li :class="paginationNext">
+                <a
+                  class="page-link"
+                  href="#"
+                  v-on:click="getNextPage"
+                  aria-label="Next"
+                >
+                  <span aria-hidden="true">&raquo;</span>
+                  <span class="sr-only">Next</span>
+                </a>
+              </li>
+            </ul>
+          </nav>
+          <h1>Shows ({{ shows.length }}):</h1>
+          <div class="row">
+            <div
+              class="col-lg-2 col-md-4 col-sm-6 my-2"
+              v-for="(item, index) in shows"
+              :key="item.id"
+              :data-index="index"
+            >
+              <article class="card">
+                <header class="title-header">
+                  <router-link :to="{ name: 'Show', params: { id: item.id } }">
+                    <h3>{{ item.name }}</h3>
+                  </router-link>
+                </header>
+                <div class="card">
+                  <router-link :to="{ name: 'Show', params: { id: item.id } }">
+                    <img
+                      v-if="item.image"
+                      :src="item.image.original"
+                      class="w-100 mr-3 card-img-top rounded imgDimensions"
+                      :alt="item.name"
+                    />
+                    <img
+                      v-else
+                      src="https://lightwidget.com/wp-content/uploads/2018/05/local-file-not-found-295x300.png"
+                      class="w-100 mr-3 card-img-top rounded imgDimensions"
+                      :alt="item.name"
+                    />
+                  </router-link>
+                </div>
+              </article>
+            </div>
+          </div>
+        </section>
+
+        <!-- Filtered Shows -->
+        <section
+          class="movies"
+          id="movies"
+          v-else-if="filteredShows.length > 0"
+        >
+          <h1>Shows ({{ filteredShows.length }}):</h1>
+          <div class="row">
+            <div
+              class="col-lg-2 col-md-4 col-sm-6 my-2"
+              v-for="(item, index) in filteredShows"
+              :key="item.id"
+              :data-index="index"
+            >
+              <article class="card">
+                <header class="title-header">
+                  <router-link :to="{ name: 'Show', params: { id: item.id } }">
+                    <h3>{{ item.name }}</h3>
+                  </router-link>
+                </header>
+                <div class="card">
+                  <router-link :to="{ name: 'Show', params: { id: item.id } }">
+                    <img
+                      v-if="item.image"
+                      :src="item.image.original"
+                      class="w-100 mr-3 card-img-top rounded imgDimensions"
+                      :alt="item.name"
+                    />
+                    <img
+                      v-else
+                      src="https://lightwidget.com/wp-content/uploads/2018/05/local-file-not-found-295x300.png"
+                      class="w-100 mr-3 card-img-top rounded imgDimensions"
+                      :alt="item.name"
+                    />
+                  </router-link>
+                </div>
+              </article>
+            </div>
+          </div>
+        </section>
+
+        <!-- No shows found -->
+        <section v-else class="movies" id="movies">
+          <h1>No shows found matching your criteria.</h1>
+        </section>
+      </div>
     </div>
-    <!-- Layout credit: https://bootsnipp.com/snippets/vr6qd -->
-    <div class="col-10" v-if="showComponent">
-      <!-- Shows -->
-      <section
-        class="movies"
-        id="movies"
-        v-if="
-          filtersApplied.status.length == 0 &&
-            filtersApplied.genres.length == 0 &&
-            filtersApplied.languages.length == 0 &&
-            filtersApplied.types.length == 0
-        "
-      >
-        <h4>Current Page: {{ currentPage + 1 }}</h4>
-        <nav aria-label="">
-          <ul class="pagination">
-            <li :class="paginationPrevious">
-              <a
-                class="page-link"
-                href="#"
-                v-on:click="getPreviousPage"
-                aria-label="Previous"
-              >
-                <span aria-hidden="true">&laquo;</span>
-                <span class="sr-only">Previous</span>
-              </a>
-            </li>
-            <li :class="paginationNext">
-              <a
-                class="page-link"
-                href="#"
-                v-on:click="getNextPage"
-                aria-label="Next"
-              >
-                <span aria-hidden="true">&raquo;</span>
-                <span class="sr-only">Next</span>
-              </a>
-            </li>
-          </ul>
-        </nav>
-        <h1>Shows ({{ shows.length }}):</h1>
-        <div class="row">
-          <div
-            class="col-lg-2 col-md-4 col-sm-6 my-2"
-            v-for="(item, index) in shows"
-            :key="item.id"
-            :data-index="index"
-          >
-            <article class="card">
-              <header class="title-header">
-                <router-link :to="{ name: 'Show', params: { id: item.id } }">
-                  <h3>{{ item.name }}</h3>
-                </router-link>
-              </header>
-              <div class="card">
-                <router-link :to="{ name: 'Show', params: { id: item.id } }">
-                  <img 
-                    v-if="item.image"
-                    :src="item.image.original"
-                    class="w-100 mr-3 card-img-top rounded imgDimensions"
-                    :alt="item.name"
-                  >
-                  <img
-                      v-else
-                      src="https://lightwidget.com/wp-content/uploads/2018/05/local-file-not-found-295x300.png"
-                      class="w-100 mr-3 card-img-top rounded imgDimensions"
-                      :alt="item.name"
-                    />
-                </router-link>
-              </div>
-            </article>
-          </div>
-        </div>
-      </section>
-
-      <!-- Filtered Shows -->
-      <section class="movies" id="movies" v-else-if="filteredShows.length > 0">
-        <h1>Shows ({{ filteredShows.length }}):</h1>
-        <div class="row">
-          <div
-            class="col-lg-2 col-md-4 col-sm-6 my-2"
-            v-for="(item, index) in filteredShows"
-            :key="item.id"
-            :data-index="index"
-          >
-            <article class="card">
-              <header class="title-header">
-                <router-link :to="{ name: 'Show', params: { id: item.id } }">
-                  <h3>{{ item.name }}</h3>
-                </router-link>
-              </header>
-              <div class="card">
-                <router-link :to="{ name: 'Show', params: { id: item.id } }">
-                  <img 
-                    v-if="item.image"
-                    :src="item.image.original"
-                    class="w-100 mr-3 card-img-top rounded imgDimensions"
-                    :alt="item.name"
-                  >
-                  <img
-                      v-else
-                      src="https://lightwidget.com/wp-content/uploads/2018/05/local-file-not-found-295x300.png"
-                      class="w-100 mr-3 card-img-top rounded imgDimensions"
-                      :alt="item.name"
-                    />
-                </router-link>
-              </div>
-            </article>
-          </div>
-        </div>
-      </section>
-
-      <!-- No shows found -->
-      <section v-else class="movies" id="movies">
-        <h1>No shows found matching your criteria.</h1>
-      </section>
+    <div v-if="!shows || !filteredShows" class="d-flex justify-content-center">
+      <div class="spinner-border" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
     </div>
   </div>
 </template>
@@ -148,6 +162,7 @@ export default {
       genres: [],
       languages: [],
       types: [],
+      runtime: [],
 
       //Filters being applied will be stored in fittersApplied
       filtersApplied: {
@@ -155,6 +170,7 @@ export default {
         genres: [],
         languages: [],
         types: [],
+        runtime: 0
       },
       showComponent: false, //Used to display component once data has been fetched.
       currentPage: 0,
@@ -212,6 +228,7 @@ export default {
           this.filterGenres();
           this.filterLanguages();
           this.filterTypes();
+          this.filterRuntime();
         })
         .catch(function(error) {
           console.log(error);
@@ -269,6 +286,16 @@ export default {
           }
         }
         this.types.sort();
+      }
+    },
+    filterRuntime: function() {
+      if (this.shows.length > 0) {
+        for (let i = 0; i < this.shows.length; i++) {
+          if (!this.runtime.includes(this.shows[i].runtime)) {
+            this.runtime.push(this.shows[i].runtime);
+          }
+        }
+        this.runtime.sort((a, b) => a - b);
       }
     },
     mergeData: function() {
@@ -364,7 +391,30 @@ export default {
         }
       }
 
-      //TODO: rating, runtime, premier (yearly, monthly).
+      //Runtime
+      var runtimeResult = [];
+      if (this.filteredShows.length > 0) {
+        if(this.filtersApplied.runtime > 0){
+          runtimeResult = this.filteredShows.filter((show) => this.filtersApplied.runtime >= show.runtime);
+        }
+        if (runtimeResult.length > 0) {
+            this.filteredShows = [...runtimeResult];
+          } else {
+            this.filteredShows = [];
+          }
+      }
+      else{
+        if(this.filtersApplied.runtime > 0){
+          runtimeResult = this.shows.filter((show) => this.filtersApplied.runtime >= show.runtime);
+        }
+        if (runtimeResult.length > 0) {
+            this.filteredShows = [...runtimeResult];
+          } else {
+            this.filteredShows = [];
+          }
+      }
+
+      //TODO: rating, premier (yearly, monthly).
     },
     setSelectedStatus: function(data) {
       if (data.length > 0) {
@@ -416,6 +466,12 @@ export default {
       }
       this.mergeData();
     },
+    setSelectedRuntime: function(data) {
+      if(data > 0){
+        this.filtersApplied.runtime = data;
+      }
+      this.mergeData();
+    }
   },
 };
 </script>
