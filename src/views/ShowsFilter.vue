@@ -3,7 +3,25 @@
     <!-- Runtime -->
     <h5 class="card-header">Filter by runtime:</h5>
     <div class="card-body" v-if="runtime.length > 0">
-      <p>Runtime: {{ checkedRuntime }}</p>
+      <div class="row">
+        <div class="col-sm">
+          <p>
+            Runtime:
+          </p>
+        </div>
+        <div class="col-sm">
+          <input
+            @change="$emit('runtimeFilter', checkedRuntime)"
+            class="form-check-input"
+            type="text"
+            v-model="checkedRuntime"
+            size="4"
+            min="0"
+            max="120"
+          />
+        </div>
+      </div>
+
       <input
         @change="$emit('runtimeFilter', checkedRuntime)"
         type="range"
@@ -21,11 +39,6 @@
         <div class="col-sm text-right">
           120
         </div>
-      </div>
-      <div class="form-check" v-for="item in runtime" :key="item">
-        <!-- <input @change="$emit('runtimeFilter', checkedRuntime)" class="form-check-input" type="checkbox"
-                  :id="item" :value="item" v-model="checkedRuntime"> -->
-        <!-- {{ item }} -->
       </div>
     </div>
 
