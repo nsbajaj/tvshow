@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="home row mx-2" v-if="showComponent">
-      <div class="col-2">
+      <div class="col-2 animated fadeInLeft">
         <ShowsFilter
           v-if="shows"
           :showStatus="status"
@@ -17,7 +17,7 @@
         ></ShowsFilter>
       </div>
       <!-- Layout credit: https://bootsnipp.com/snippets/vr6qd -->
-      <div class="col-10">
+      <div class="col-10 animated fadeInRight">
         <!-- Shows -->
         <section
           class="movies"

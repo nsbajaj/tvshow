@@ -1,6 +1,6 @@
 <template>
   <div id="app" class="mx-auto">
-    <div id="nav">
+    <div id="nav" class="animated fadeInDown">
       <Navbar></Navbar>
     </div>
     

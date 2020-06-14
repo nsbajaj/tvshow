@@ -26,9 +26,14 @@
               >Shows <span class="sr-only"></span
             ></router-link>
           </li>
-          <!-- <li class="nav-item">
-                    <a class="nav-link" href="#">People</a>
-                </li> -->
+          <li class="nav-item">
+            <!-- <i class="fas fa-dollar-sign"></i>
+            <font-awesome-icon icon="dollar-sign"></font-awesome-icon>
+            <font-awesome-icon
+              icon="shopping-cart"
+              class="mx-2"
+            ></font-awesome-icon> -->
+          </li>
         </ul>
         <form class="form-inline my-2 my-lg-0">
           <!-- https://www.w3schools.com/howto/howto_css_animated_search.asp -->
@@ -42,6 +47,7 @@
           <router-link
             :to="{ name: 'Search', params: { id: input } }"
             v-if="input"
+            class="animated fadeInRight"
           >
             <button class="btn btn-outline-success my-2 my-sm-0" type="submit">
               Search
@@ -55,6 +61,7 @@
 
 <script>
 // import $ from 'jquery'
+// import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
 export default {
   name: "navbar",
@@ -62,6 +69,12 @@ export default {
     return {
       input: null,
     };
+  },
+  components: {
+    // FontAwesomeIcon,
+  },
+  computed: {
+    
   },
   methods: {
     // expand: function() {

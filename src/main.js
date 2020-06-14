@@ -3,7 +3,17 @@ import App from "./App.vue";
 import router from "./router";
 
 import "bootstrap"; //Imports Bootstrap JS (including jQuery, Popper)
+import { library } from "@fortawesome/fontawesome-svg-core";
+
 import "bootstrap/dist/css/bootstrap.css" //Imports Bootstrap CSS
+import "animate.css/animate.css";
+
+import {
+  faShoppingCart,
+  faDollarSign
+} from "@fortawesome/free-solid-svg-icons"; //Importing icons
+
+library.add(faShoppingCart, faDollarSign); //Manually pushing icons into the core library
 
 //import moment from 'moment'
 
