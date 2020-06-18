@@ -1,9 +1,10 @@
 <template>
   <div>
+
     <!-- Runtime -->
-    <div class="card my-2">
+    <div class="card my-2" v-if="runtime.length > 0">
       <h5 class="card-header">Filter by runtime:</h5>
-      <div class="card-body" v-if="runtime.length > 0">
+      <div class="card-body">
         <!-- Consider adding a watch for user to not press enter everytime to search -->
         <div class="row">
           <div class="col-sm">
@@ -131,7 +132,24 @@ export default {
       checkedRuntime: 0,
     };
   },
-  props: ["showStatus", "genres", "languages", "types", "runtime"],
-  created() {},
+  props: { 
+    showStatus: {
+      default: []
+    },
+    genres: {
+      default: []
+    },
+    languages: {
+      default: []
+    },
+    types: {
+      default: []
+    },
+    runtime: {
+      default: 0
+    }
+  },
+  created() {
+  },
 };
 </script>
