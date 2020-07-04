@@ -1,8 +1,8 @@
 <template>
   <div class="container">
-    <div class="row">
+    <div class="row animated fadeInUp" v-if="person">
       <!-- Post Content Column -->
-      <div class="col-lg-8" v-if="person">
+      <div class="col-lg-8">
         <!-- Title -->
         <h1 class="mt-4">{{ person.name }}</h1>
 
@@ -70,6 +70,12 @@
 
         <hr />
 
+      </div>
+    </div>
+
+    <div v-else class="d-flex justify-content-center">
+      <div class="spinner-border" role="status">
+        <span class="sr-only">Loading...</span>
       </div>
     </div>
   </div>

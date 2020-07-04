@@ -1,8 +1,8 @@
 <template>
   <div class="container">
-    <div class="row">
+    <div class="row animated fadeInUp" v-if="episode">
       <!-- Post Content Column -->
-      <div class="col-lg-12" v-if="episode">
+      <div class="col-lg-12">
         <!-- Title -->
         <h1 class="mt-4">{{ episode.name }}</h1>
 
@@ -35,6 +35,12 @@
         </p>
 
         <hr />
+      </div>
+    </div>
+
+    <div v-else class="d-flex justify-content-center">
+      <div class="spinner-border" role="status">
+        <span class="sr-only">Loading...</span>
       </div>
     </div>
   </div>

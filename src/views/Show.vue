@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <div class="row" v-if="showComponent">
+    <div class="row animated fadeInUp" v-if="showComponent">
       <!-- Post Content Column -->
       <div class="col-lg-12" v-if="show">
         <!-- Title -->
@@ -57,6 +57,11 @@
           </div>
         </div>
         <hr />
+      </div>
+    </div>
+    <div v-else class="d-flex justify-content-center">
+      <div class="spinner-border" role="status">
+        <span class="sr-only">Loading...</span>
       </div>
     </div>
   </div>
