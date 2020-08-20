@@ -134,16 +134,16 @@ export default {
   },
   props: { 
     showStatus: {
-      default: []
+      default: null
     },
     genres: {
-      default: []
+      default: null
     },
     languages: {
-      default: []
+      default: null
     },
     types: {
-      default: []
+      default: null
     },
     runtime: {
       default: 0

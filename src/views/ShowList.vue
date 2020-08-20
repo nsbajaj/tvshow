@@ -81,7 +81,7 @@
                     />
                     <img
                       v-else
-                      src="https://lightwidget.com/wp-content/uploads/2018/05/local-file-not-found-295x300.png"
+                      src="https://www.teknozeka.com/wp-content/uploads/2020/03/wp-header-logo-21.png"
                       class="w-100 mr-3 card-img-top rounded imgDimensions"
                       :alt="item.name"
                     />
@@ -122,7 +122,7 @@
                     />
                     <img
                       v-else
-                      src="https://lightwidget.com/wp-content/uploads/2018/05/local-file-not-found-295x300.png"
+                      src="https://www.teknozeka.com/wp-content/uploads/2020/03/wp-header-logo-21.png"
                       class="w-100 mr-3 card-img-top rounded imgDimensions"
                       :alt="item.name"
                     />
