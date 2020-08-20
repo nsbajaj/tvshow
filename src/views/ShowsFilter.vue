@@ -20,7 +20,7 @@
               v-model="checkedRuntime"
               size="4"
               min="0"
-              max="120"
+              :max="maxRuntimeRange"
             />
           </div>
         </div>
@@ -30,7 +30,7 @@
           type="range"
           class="custom-range"
           min="0"
-          max="120"
+          :max="maxRuntimeRange"
           step="0.5"
           id="customRange3"
           v-model="checkedRuntime"
@@ -40,7 +40,7 @@
             1
           </div>
           <div class="col-sm text-right">
-            120
+            {{ maxRuntimeRange }}
           </div>
         </div>
       </div>
@@ -132,7 +132,7 @@ export default {
       checkedRuntime: 0,
     };
   },
-  props: { 
+  props: {
     showStatus: {
       default: null
     },
@@ -147,9 +147,13 @@ export default {
     },
     runtime: {
       default: 0
+    },
+    maxRuntimeRange: {
+        default: 0
     }
   },
   created() {
+    
   },
 };
 </script>

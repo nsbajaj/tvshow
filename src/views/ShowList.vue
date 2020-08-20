@@ -14,6 +14,7 @@
           @typeFilter="setSelectedTypes"
           :runtime="runtime"
           @runtimeFilter="setSelectedRuntime"
+          :maxRuntimeRange="maxRuntimeRange"
         ></ShowsFilter>
       </div>
       <!-- Layout credit: https://bootsnipp.com/snippets/vr6qd -->
@@ -163,6 +164,7 @@ export default {
       languages: [],
       types: [],
       runtime: [],
+      maxRuntimeRange: 0,
 
       //Filters being applied will be stored in fittersApplied
       filtersApplied: {
@@ -296,6 +298,7 @@ export default {
           }
         }
         this.runtime.sort((a, b) => a - b);
+        this.maxRuntimeRange = this.runtime[this.runtime.length-1];
       }
     },
     mergeData: function() {
@@ -395,23 +398,23 @@ export default {
       var runtimeResult = [];
       if (this.filteredShows.length > 0) {
         if(this.filtersApplied.runtime > 0){
-          runtimeResult = this.filteredShows.filter((show) => this.filtersApplied.runtime >= show.runtime);
-        }
-        if (runtimeResult.length > 0) {
+          runtimeResult = this.filteredShows.filter((show) => show.runtime <= this.filtersApplied.runtime);
+          if (runtimeResult.length > 0) {
             this.filteredShows = [...runtimeResult];
           } else {
             this.filteredShows = [];
           }
+        }
       }
       else{
         if(this.filtersApplied.runtime > 0){
-          runtimeResult = this.shows.filter((show) => this.filtersApplied.runtime >= show.runtime);
-        }
-        if (runtimeResult.length > 0) {
+          runtimeResult = this.shows.filter((show) => show.runtime <= this.filtersApplied.runtime);
+          if (runtimeResult.length > 0) {
             this.filteredShows = [...runtimeResult];
           } else {
             this.filteredShows = [];
           }
+        }
       }
 
       //TODO: rating, premier (yearly, monthly).
