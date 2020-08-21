@@ -12,18 +12,23 @@
       >
         <span class="navbar-toggler-icon"></span>
       </button>
-      <router-link :to="{ path: '/' }" class="navbar-brand">tvshow</router-link>
+      <!-- <router-link :to="{ path: '/shows' }" class="navbar-brand">tvshow</router-link> -->
 
       <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
         <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-          <li class="nav-item active">
+          <!-- <li class="nav-item active">
             <router-link :to="{ path: '/' }" class="nav-link" href="#"
               >Home <span class="sr-only">(current)</span></router-link
             >
-          </li>
+          </li> -->
           <li class="nav-item">
             <router-link :to="{ path: '/shows' }" class="nav-link" href="#"
               >Shows <span class="sr-only"></span
+            ></router-link>
+          </li>
+          <li class="nav-item">
+            <router-link :to="{ path: '/about' }" class="nav-link" href="#"
+              >About <span class="sr-only"></span
             ></router-link>
           </li>
           <li class="nav-item">

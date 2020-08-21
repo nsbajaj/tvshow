@@ -45,26 +45,6 @@ export default {
   props: ["cast"],
   created() {},
   methods: {
-    // searchCast: function() {
-    //   if(this.showID && String(this.showID).trim().length > 0) {
-    //     fetch("http://api.tvmaze.com/shows/" + this.showID + "/cast")
-    //       .then(function(response) {
-    //         if (!response.ok) {
-    //           throw Error(response.statusText);
-    //         }
-    //         return response;
-    //       })
-    //       .then((response) => response.json())
-    //       .then((data) => {
-    //             this.cast = data;
-    //       })
-    //       .catch(function(error) {
-    //         console.log(error);
-    //       });
-    //   } else {
-    //     //console.log("Please enter data");
-    //   }
-    // },
   },
 };
 </script>
